@@ -1,112 +1,158 @@
-# SHOPORA — Modern E-Commerce Platform
+# 🛍️ SHOPORA — Modern E-Commerce Platform
 
-A premier, high-performance modern e-commerce storefront engineered with **React**, **Vite**, **Tailwind CSS**, and **Lucide Icons**.
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Lucide Icons](https://img.shields.io/badge/Lucide_Icons-1.16-F56565?style=flat-square)](https://lucide.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
+
+An editorial, high-performance modern e-commerce storefront crafted with **React 18**, **Vite**, **Tailwind CSS**, and **Lucide Icons**. Built for seamless shopping experiences across luxury fashion, audiophile gear, horology, and organic skincare.
 
 ---
 
-## 🌟 Key Features
+## ✨ Features Overview
 
-### 🛍️ Comprehensive Storefront
-- **Top Announcement Bar**: Dismissible seasonal promo banner with instant currency switcher (`USD $`, `EUR €`, `GBP £`).
-- **Curated Hero Section**: Atmospheric ambient lighting, editorial headline, social proof indicators, and quick action CTAs.
-- **Visual Category Filter**: Dynamic category pills (`Fashion`, `Electronics`, `Watches`, `Footwear`, `Beauty`) with real-time product counts.
-- **Flash Deal of the Day**: Live reactive countdown timer with instant deal claiming.
-- **Advanced Product Catalog**:
-  - Live search with instant query filtering.
-  - Price range slider ($50 – $600+).
-  - Rating filter (★ 4.5+, 4.8+).
-  - Multi-criteria sorting (Featured, Biggest Discount %, Price: Low to High, Price: High to Low, Highest Rated, New Arrivals).
+### 🏪 1. Modern Storefront & Discovery
+- **Editorial Hero Section**: Ambient radial gradients, promotional highlights, verified customer social proof ($4.9/5$ from 12,000+ reviews), and quick collection scroll triggers.
+- **Top Announcement Bar**: Dismissible notification banner highlighting seasonal promos (`SHOPORA20`) and trust guarantees.
+- **Multi-Currency Engine**: Real-time conversion between **USD ($)**, **EUR (€)**, and **GBP (£)**.
+- **Dark / Light Theme**: Instant theme switcher between sleek deep-slate nighttime and clean crisp daytime mode.
+- **Visual Category Filter**: Categorized pills (*Fashion & Knitwear*, *Electronics & Audio*, *Luxury Watches*, *Footwear*, *Beauty & Skincare*) with dynamic item counters.
+- **Live Search & Autocomplete**: Real-time search across titles, brands, and descriptions with one-tap query clearing.
+- **Flash Deal of the Day**: Live reactive countdown timer ($08\text{h} : 42\text{m} : 19\text{s}$) with stock indicators.
 
-### 🔍 Rich Product Cards & Quick View Modal
-- Dual image hover transition (swaps between angles seamlessly).
-- Discount badges, "Best Seller", and "New" tags.
-- Color swatch preview with active ring selection.
-- Full-screen Quick View / Product Detail Modal:
-  - Multi-angle high-resolution gallery with thumbnail selector.
-  - Size selection chips and color swatches.
-  - Quantity adjuster with low-stock warnings (`"Only 5 left in stock!"`).
-  - Tabbed technical specifications, key feature highlights, and verified customer reviews.
-  - "Add to Cart" and "Instant Checkout" triggers.
+### 🔍 2. Product Detail & Interactive Modals
+- **Multi-Angle Gallery**: High-resolution photography with thumbnail selector and zoom effects.
+- **Dual Hover Previews**: Secondary angle reveal on card hover.
+- **Interactive Swatches**: Live color swatches with name badge and active ring styling.
+- **International Size Guide Modal**: Multi-region conversion tables (US, UK, EU, CM) for tops, bottoms, and footwear.
+- **Verified Customer Review Engine**:
+  - Interactive 5-star rating selector.
+  - Live review submission form.
+  - Dynamic recalculation of product average rating and review counts.
 
-### 🛒 Slide-Out Shopping Cart Drawer
-- Itemized overview with thumbnails, sizes, colors, and unit prices.
-- Quantity steppers (`+` / `-`) and item removal with confirmation toasts.
-- **Dynamic Free Shipping Progress Bar**: Live threshold calculator (Free shipping on orders over $150).
-- **Promo Code Engine**:
-  - `SHOPORA20`: 20% discount storewide.
-  - `WELCOME10`: 10% discount for new shoppers.
-  - `SAVE50`: $50 off orders exceeding $200.
-- Automatic tax (8%) and shipping calculations.
+### 🛒 3. Cart & Saved Wishlist
+- **Slide-Out Cart Drawer**: Full item overview with thumbnail, selected size/color, and stepper quantity controls.
+- **Free Shipping Progress Meter**: Dynamic calculation toward the $150 free express shipping threshold.
+- **Promo Coupon Engine**:
+  - `SHOPORA20`: 20% off storewide.
+  - `WELCOME10`: 10% new customer welcome discount.
+  - `SAVE50`: $50 discount on orders exceeding $200.
+- **Wishlist Drawer**: One-click heart save with *"Move All to Bag"* bulk action, persisted in `localStorage`.
 
-### ❤️ Saved Favorites (Wishlist) Drawer
-- Save any product with a single heart tap.
-- Slide-over wishlist manager with "Move All to Bag" bulk action.
-- Fully persisted in browser `localStorage`.
+### 💳 4. 4-Step Secure Checkout Flow
+1. **Contact & Shipping**: Form fields with a **1-Click "Auto-fill Demo Info"** button for instant testing.
+2. **Delivery Speed**: Standard Tracked, Express Air Courier, or VIP White Glove Same-Day.
+3. **Interactive Payment Card**: Live credit card graphic that renders cardholder name, expiry date, and masked number in real time. Also supports PayPal and Apple Pay simulations.
+4. **Order Confirmation & Tracking**: Animated checkmark, auto-generated unique Order ID (e.g. `SHOP-847291`), estimated delivery date, and invoice link.
 
-### 💳 4-Step Secure Checkout Flow
-1. **Customer & Shipping Information**: Email, full name, street address, and one-click `"Auto-fill Demo Info"` button for rapid testing.
-2. **Delivery Speed Options**: Standard Tracked (Free over $150), Express Air Courier, or VIP White Glove Same-Day.
-3. **Interactive Payment Screen**: Live animated credit card preview with real-time cardholder name, masked card number, and expiry date. Supports PayPal and Apple Pay simulations.
-4. **Order Confirmation & Itemized Receipt**: Animated success badge, generated unique order tracking ID (e.g. `SHOP-749210`), delivery estimates, and direct link to the order history dashboard.
+### 📄 5. Order Management & Printable Invoices
+- **Customer Order History**: Dashboard tracking recent and historical orders with live status badges (*Processing*, *Shipped*, *Delivered*).
+- **Printable Tax Invoices**: Official formatted tax receipt with itemized lines, discounts, taxes, and a browser-native `Print / Save as PDF` trigger.
 
-### 📦 Order History Tracking
-- Dedicated **My Orders** screen tracking past and newly placed orders.
-- Item thumbnails, shipment status pills, order timestamps, and delivery address records.
+### 👤 6. Customer Profile & VIP Rewards
+- **VIP Member Tiering**: Gold Member badge with bonus rewards points tracker (1,450 points = $14.50 credit).
+- **Address Book**: Manage primary residence and shipping destinations.
+- **Demo Quick Login**: 1-click authentication as *Rehima Ali (VIP Member)*.
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| **Frontend Framework** | React 18 | Declarative component UI & hooks |
+| **Build Tooling** | Vite 5 | Sub-second HMR and optimized Rollup bundling |
+| **Styling** | Tailwind CSS 3 | Utility-first responsive design & custom animations |
+| **Iconography** | Lucide React | Lightweight, scalable vector icons |
+| **State Management** | React Context API | Global Cart, Wishlist, Orders, User Auth, and Currency |
+| **Storage & Persistence** | Browser `localStorage` | Preserves cart items, wishlist, user reviews, and placed orders |
+| **Version Control** | Git & GitHub | Modular branching and structured commits |
+
+---
+
+## 📂 Project Directory Structure
+
+```
+SHOPORA – Modern E-commerce Platform/
+├── .gitignore                   # Multi-stack ignore rules (React, Node, Mongo, Vite)
+├── README.md                    # Comprehensive documentation & showcase
+├── index.html                   # HTML entry point with Google Fonts
+├── package.json                 # Project dependencies & scripts
+├── postcss.config.js            # PostCSS configuration
+├── tailwind.config.js           # Tailwind theme, typography & keyframes
+├── vite.config.js               # Vite development & build setup
+├── src/
+│   ├── main.jsx                 # Application root mount
+│   ├── App.jsx                  # Main view orchestration & layout
+│   ├── index.css                # Global stylesheet & Tailwind directives
+│   ├── data/
+│   │   └── products.js          # Product catalog dataset & promo codes
+│   ├── context/
+│   │   └── ShopContext.jsx      # Global context (Cart, Wishlist, Auth, Orders, Currency)
+│   └── components/
+│       ├── Navbar.jsx           # Header, live search, currency & profile triggers
+│       ├── Hero.jsx             # Luxury hero with trust highlights
+│       ├── CategoryPills.jsx    # Visual category selection filters
+│       ├── FeaturedDeals.jsx    # Flash deal with live countdown clock
+│       ├── ProductCard.jsx      # Interactive card with dual-angle hover
+│       ├── ProductGrid.jsx      # Filtering controls, sorting & responsive grid
+│       ├── ProductDetailModal.jsx # Detail modal with gallery, specs & reviews
+│       ├── CartDrawer.jsx       # Slide-out cart with shipping progress bar
+│       ├── WishlistDrawer.jsx   # Saved favorites drawer
+│       ├── CheckoutModal.jsx    # 4-Step checkout with dynamic card graphic
+│       ├── OrdersView.jsx       # Order history & shipment tracking
+│       ├── AuthModal.jsx        # User login, registration & VIP profile modal
+│       ├── SizeGuideModal.jsx   # International sizing & fit guide
+│       ├── InvoiceModal.jsx     # Printable tax invoice & PDF receipt
+│       ├── RecentlyViewed.jsx   # Recently viewed products carousel
+│       ├── Newsletter.jsx       # VIP newsletter subscription banner
+│       ├── Footer.jsx           # Multi-column e-commerce footer
+│       └── Toast.jsx            # Notification toast alerts
+```
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Start Development Server
+### Prerequisites
+- Node.js (v18.0 or higher recommended)
+- npm or yarn
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Rehima123/Shopora-E-commerce-Product-Management.git
+cd Shopora-E-commerce-Product-Management
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Launch Development Server
 ```bash
 npm run dev
 ```
-The application will launch at `http://localhost:3000`.
+Open **`http://localhost:3000`** in your browser.
 
-### 2. Build for Production
+### 4. Build for Production
 ```bash
 npm run build
 ```
-Creates an optimized static bundle in the `dist/` directory.
-
-### 3. Preview Production Build
-```bash
-npm run preview
-```
+Creates an optimized static bundle in the `dist/` folder ready for deployment on Vercel, Netlify, or GitHub Pages.
 
 ---
 
-## 📁 Project Architecture
+## 🛡️ Security & Git Hygiene Standards
 
-```
-SHOPORA – Modern E-commerce Platform/
-├── index.html                   # HTML entry point with Google Fonts
-├── package.json                 # Project dependencies & scripts
-├── vite.config.js               # Vite configuration
-├── tailwind.config.js           # Custom Tailwind theme & animations
-├── postcss.config.js            # PostCSS plugins
-├── src/
-│   ├── main.jsx                 # React root mount
-│   ├── App.jsx                  # Main application container
-│   ├── index.css                # Global stylesheet & Tailwind directives
-│   ├── data/
-│   │   └── products.js          # Product catalog & promo codes
-│   ├── context/
-│   │   └── ShopContext.jsx      # Central state (Cart, Wishlist, Orders, Currencies, Filters)
-│   └── components/
-│       ├── Navbar.jsx           # Header, search, currency, cart/wishlist counters
-│       ├── Hero.jsx             # Editorial hero with highlights & trust markers
-│       ├── CategoryPills.jsx    # Visual category selection pills
-│       ├── FeaturedDeals.jsx    # Flash deal with live countdown clock
-│       ├── ProductCard.jsx      # Interactive product card with hover previews
-│       ├── ProductGrid.jsx      # Filtering controls, sorting & responsive grid
-│       ├── ProductDetailModal.jsx # Full product inspection modal & specs
-│       ├── CartDrawer.jsx       # Slide-out cart with shipping threshold bar
-│       ├── WishlistDrawer.jsx   # Slide-out saved favorites manager
-│       ├── CheckoutModal.jsx    # 4-Step checkout with interactive card preview
-│       ├── OrdersView.jsx       # Order history & shipment tracking dashboard
-│       ├── Newsletter.jsx       # VIP newsletter signup with promo incentive
-│       ├── Footer.jsx           # Modern multi-column e-commerce footer
-│       └── Toast.jsx            # Floating action notification toasts
-```
+- ✅ **No Secrets Committed**: `.env`, `.pem`, API keys, passwords, and private tokens are excluded via `.gitignore`.
+- ✅ **No Build or Dependency Clutter**: `node_modules/` and `dist/` are strictly ignored.
+- ✅ **Semantic Commits**: Adheres to Conventional Commits standards (`feat:`, `chore:`, `docs:`, `fix:`).
 
+---
+
+## 👩‍💻 Author & Acknowledgements
+
+- **Lead Developer**: Rehima Ali ([@Rehima123](https://github.com/Rehima123))
+- **Repository**: [Shopora-E-commerce-Product-Management](https://github.com/Rehima123/Shopora-E-commerce-Product-Management.git)

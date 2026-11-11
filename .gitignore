@@ -1,7 +1,54 @@
-node_modules
-dist
-dist-ssr
-*.local
-.vscode
-.DS_Store
+# Dependencies
+node_modules/
+jspm_packages/
+web_modules/
 
+# Production Build Artifacts
+dist/
+dist-ssr/
+build/
+out/
+.next/
+
+# Environment Variables & Secret Credentials
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+*.env
+*.pem
+*.key
+*.cert
+
+# Logs & Diagnostics
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Database & Runtime Data (MongoDB, SQLite, local caches)
+*.sqlite
+*.db
+.mongorc.js
+dump/
+
+# Editor & System Files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+*.lcov
