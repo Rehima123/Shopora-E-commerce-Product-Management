@@ -1,9 +1,9 @@
 import React from 'react';
 import { useShop } from '../context/ShopContext';
-import { Package, Truck, Calendar, MapPin, CheckCircle, ArrowRight, ShoppingBag } from 'lucide-react';
+import { Package, Truck, Calendar, MapPin, CheckCircle, ArrowRight, ShoppingBag, FileText, Printer } from 'lucide-react';
 
 export const OrdersView = () => {
-  const { orders, formatPrice, setActiveTab } = useShop();
+  const { orders, formatPrice, setActiveTab, setSelectedInvoiceOrder } = useShop();
 
   if (orders.length === 0) {
     return (
@@ -70,8 +70,16 @@ export const OrdersView = () => {
                 </div>
               </div>
 
-              {/* Status Pill */}
+              {/* Status Pill & Invoice Button */}
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setSelectedInvoiceOrder(ord)}
+                  className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                >
+                  <FileText className="w-3.5 h-3.5 text-brand-600" />
+                  <span>Invoice / Receipt</span>
+                </button>
+
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                   <span>{ord.status}</span>

@@ -11,7 +11,10 @@ import {
   ShoppingBag,
   Plus,
   Minus,
-  Sparkles
+  Sparkles,
+  Ruler,
+  MessageSquarePlus,
+  Send
 } from 'lucide-react';
 
 export const ProductDetailModal = () => {
@@ -23,7 +26,9 @@ export const ProductDetailModal = () => {
     toggleWishlist,
     isWishlisted,
     setIsCheckoutOpen,
-    setIsCartOpen
+    setIsSizeGuideOpen,
+    submitProductReview,
+    user
   } = useShop();
 
   if (!quickViewProduct) return null;
@@ -38,6 +43,13 @@ export const ProductDetailModal = () => {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'specs' | 'reviews'
   const [isAdded, setIsAdded] = useState(false);
 
+  // Review submission state
+  const [isWritingReview, setIsWritingReview] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewTitle, setReviewTitle] = useState('');
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewUser, setReviewUser] = useState(user ? user.name : '');
+
   const handleAddToCart = () => {
     addToCart(product, selectedSize, selectedColor, quantity);
     setIsAdded(true);
@@ -48,6 +60,22 @@ export const ProductDetailModal = () => {
     addToCart(product, selectedSize, selectedColor, quantity);
     setQuickViewProduct(null);
     setIsCheckoutOpen(true);
+  };
+
+  const handleReviewSubmit = (e) => {
+    e.preventDefault();
+    if (!reviewComment.trim()) return;
+
+    submitProductReview(product.id, {
+      user: reviewUser.trim() || (user ? user.name : 'Verified Customer'),
+      rating: reviewRating,
+      title: reviewTitle.trim() || 'Outstanding purchase',
+      comment: reviewComment.trim()
+    });
+
+    setIsWritingReview(false);
+    setReviewTitle('');
+    setReviewComment('');
   };
 
   return (
@@ -168,12 +196,22 @@ export const ProductDetailModal = () => {
                   </div>
                 )}
 
-                {/* Size Selection */}
+                {/* Size Selection with Size Guide Link */}
                 {product.sizes && product.sizes.length > 0 && (
                   <div className="mb-6">
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Size: <span className="text-slate-900 font-semibold">{selectedSize}</span>
-                    </label>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                        Size: <span className="text-slate-900 font-semibold">{selectedSize}</span>
+                      </label>
+                      <button
+                        onClick={() => setIsSizeGuideOpen(true)}
+                        className="text-[11px] font-bold text-brand-600 hover:text-brand-800 flex items-center gap-1 transition"
+                      >
+                        <Ruler className="w-3 h-3" />
+                        <span>Size Guide</span>
+                      </button>
+                    </div>
+
                     <div className="flex flex-wrap gap-2">
                       {product.sizes.map((s) => (
                         <button
@@ -213,7 +251,7 @@ export const ProductDetailModal = () => {
                   </div>
 
                   <span className="text-xs text-slate-500">
-                    Status: <strong className="text-emerald-600 font-semibold">In Stock</strong> ({product.stock} units ready to ship)
+                    Status: <strong className="text-emerald-600 font-semibold">In Stock</strong> ({product.stock} ready to ship)
                   </span>
                 </div>
               </div>
@@ -267,7 +305,7 @@ export const ProductDetailModal = () => {
             </div>
           </div>
 
-          {/* Bottom Tabs Section: Specifications, Features, Reviews */}
+          {/* Bottom Tabs: Features, Specifications, Reviews */}
           <div className="mt-10 pt-6 border-t border-slate-200">
             <div className="flex gap-4 border-b border-slate-200 pb-2">
               <button
@@ -292,7 +330,7 @@ export const ProductDetailModal = () => {
                   activeTab === 'reviews' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-400 hover:text-slate-700'
                 }`}
               >
-                Customer Reviews ({product.reviews?.length || 0})
+                Verified Reviews ({product.reviews?.length || 0})
               </button>
             </div>
 
@@ -322,27 +360,119 @@ export const ProductDetailModal = () => {
               )}
 
               {activeTab === 'reviews' && (
-                <div className="space-y-4">
-                  {product.reviews && product.reviews.map((rev) => (
-                    <div key={rev.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-slate-900">{rev.user}</span>
-                          {rev.verified && (
-                            <span className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">
-                              Verified Purchase
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-slate-400 text-[11px]">{rev.date}</span>
-                      </div>
-                      <div className="flex text-amber-400 text-xs">
-                        {'★'.repeat(rev.rating)}
-                      </div>
-                      <h4 className="font-semibold text-slate-800 text-xs">{rev.title}</h4>
-                      <p className="text-slate-600 text-xs">{rev.comment}</p>
+                <div className="space-y-5">
+                  
+                  {/* Reviews Header & Write Review Action */}
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900">
+                        Average Rating: {product.rating} / 5.0
+                      </h4>
+                      <p className="text-xs text-slate-400">Based on {product.reviewCount} customer reviews</p>
                     </div>
-                  ))}
+
+                    <button
+                      onClick={() => setIsWritingReview(!isWritingReview)}
+                      className="px-3.5 py-1.5 bg-slate-900 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow"
+                    >
+                      <MessageSquarePlus className="w-3.5 h-3.5" />
+                      <span>{isWritingReview ? 'Cancel' : 'Write a Review'}</span>
+                    </button>
+                  </div>
+
+                  {/* Review Form */}
+                  {isWritingReview && (
+                    <form onSubmit={handleReviewSubmit} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 animate-slide-down">
+                      <h5 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                        Submit Verified Review
+                      </h5>
+
+                      {/* Star selector */}
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Your Rating:</label>
+                        <div className="flex gap-1 text-amber-400">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              type="button"
+                              key={star}
+                              onClick={() => setReviewRating(star)}
+                              className="p-1 hover:scale-110 transition"
+                            >
+                              <Star className={`w-5 h-5 ${star <= reviewRating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] font-bold text-slate-600 mb-1">Your Name</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. Rehima Ali"
+                            value={reviewUser}
+                            onChange={(e) => setReviewUser(e.target.value)}
+                            className="w-full bg-white text-xs px-3 py-2 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-slate-600 mb-1">Headline</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. Exceptional sound and design"
+                            value={reviewTitle}
+                            onChange={(e) => setReviewTitle(e.target.value)}
+                            className="w-full bg-white text-xs px-3 py-2 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Detailed Review *</label>
+                        <textarea
+                          rows={3}
+                          required
+                          placeholder="Tell us what you loved about this piece..."
+                          value={reviewComment}
+                          onChange={(e) => setReviewComment(e.target.value)}
+                          className="w-full bg-white text-xs px-3 py-2 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+                        ></textarea>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span>Publish Review</span>
+                      </button>
+                    </form>
+                  )}
+
+                  {/* Reviews List */}
+                  <div className="space-y-3">
+                    {product.reviews && product.reviews.map((rev) => (
+                      <div key={rev.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-slate-900">{rev.user}</span>
+                            {rev.verified && (
+                              <span className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">
+                                Verified Buyer
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-slate-400 text-[11px]">{rev.date}</span>
+                        </div>
+                        <div className="flex text-amber-400 text-xs">
+                          {'★'.repeat(rev.rating)}
+                        </div>
+                        <h4 className="font-semibold text-slate-800 text-xs">{rev.title}</h4>
+                        <p className="text-slate-600 text-xs">{rev.comment}</p>
+                      </div>
+                    ))}
+                  </div>
+
                 </div>
               )}
             </div>
@@ -354,4 +484,3 @@ export const ProductDetailModal = () => {
     </div>
   );
 };
-

@@ -109,3 +109,4 @@ SHOPORA – Modern E-commerce Platform/
 │       ├── Footer.jsx           # Modern multi-column e-commerce footer
 │       └── Toast.jsx            # Floating action notification toasts
 ```
+

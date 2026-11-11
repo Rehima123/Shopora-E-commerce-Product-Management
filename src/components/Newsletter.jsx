@@ -74,3 +74,4 @@ export const Newsletter = () => {
     </section>
   );
 };
+

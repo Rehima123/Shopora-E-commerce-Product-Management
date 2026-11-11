@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { PRODUCTS, PROMO_CODES } from '../data/products';
+import { PRODUCTS as INITIAL_PRODUCTS, PROMO_CODES } from '../data/products';
 
 const ShopContext = createContext();
 
@@ -10,8 +10,16 @@ export const CURRENCIES = {
 };
 
 export const ShopProvider = ({ children }) => {
-  // Products
-  const [products] = useState(PRODUCTS);
+  // Products (with dynamic review & stock updates persisted in localStorage)
+  const [products, setProducts] = useState(() => {
+    try {
+      const saved = localStorage.getItem('shopora_custom_products');
+      return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+    } catch {
+      return INITIAL_PRODUCTS;
+    }
+  });
+
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState([0, 600]);
@@ -21,12 +29,125 @@ export const ShopProvider = ({ children }) => {
   // Currency
   const [currency, setCurrency] = useState('USD');
 
+  // Dark / Light Theme
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('shopora_theme') || 'light';
+    } catch {
+      return 'light';
+    }
+  });
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('shopora_theme', theme);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
   // Drawers & Modals
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('store'); // 'store' | 'orders'
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+  const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null);
+  const [activeTab, setActiveTab] = useState('store'); // 'store' | 'orders' | 'profile'
+
+  // User Authentication State
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('shopora_user');
+      return saved
+        ? JSON.parse(saved)
+        : {
+            isLoggedIn: true,
+            name: 'Rehima Ali',
+            email: 'rehima.shopper@example.com',
+            tier: 'VIP Gold Member',
+            points: 1450,
+            avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80',
+            addresses: [
+              {
+                id: 'addr-1',
+                title: 'Primary Residence',
+                address: '742 Evergreen Luxury Terrace, Suite 400',
+                city: 'San Francisco',
+                state: 'CA',
+                zip: '94107',
+                country: 'United States',
+                isDefault: true
+              }
+            ]
+          };
+    } catch {
+      return null;
+    }
+  });
+
+  const loginUser = (userData) => {
+    const newUser = {
+      isLoggedIn: true,
+      name: userData.name || 'Rehima Ali',
+      email: userData.email || 'customer@example.com',
+      tier: 'VIP Gold Member',
+      points: 1500,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80',
+      addresses: [
+        {
+          id: 'addr-1',
+          title: 'Primary Residence',
+          address: '742 Evergreen Luxury Terrace, Suite 400',
+          city: 'San Francisco',
+          state: 'CA',
+          zip: '94107',
+          country: 'United States',
+          isDefault: true
+        }
+      ]
+    };
+    setUser(newUser);
+    showToast(`Welcome back, ${newUser.name}!`, 'success');
+  };
+
+  const logoutUser = () => {
+    setUser(null);
+    showToast('Signed out of SHOPORA', 'info');
+  };
+
+  // Recently Viewed Products
+  const [recentlyViewed, setRecentlyViewed] = useState(() => {
+    try {
+      const saved = localStorage.getItem('shopora_recently_viewed');
+      return saved ? JSON.parse(saved) : ['prod-1', 'prod-2', 'prod-3'];
+    } catch {
+      return [];
+    }
+  });
+
+  const addRecentlyViewed = (productId) => {
+    setRecentlyViewed((prev) => {
+      const filtered = prev.filter((id) => id !== productId);
+      const updated = [productId, ...filtered].slice(0, 6);
+      try {
+        localStorage.setItem('shopora_recently_viewed', JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
+  };
 
   // Cart State (Persisted in localStorage)
   const [cart, setCart] = useState(() => {
@@ -75,6 +196,14 @@ export const ShopProvider = ({ children }) => {
   // Sync to local storage
   useEffect(() => {
     try {
+      localStorage.setItem('shopora_custom_products', JSON.stringify(products));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [products]);
+
+  useEffect(() => {
+    try {
       localStorage.setItem('shopora_cart', JSON.stringify(cart));
     } catch (e) {
       console.error(e);
@@ -96,6 +225,18 @@ export const ShopProvider = ({ children }) => {
       console.error(e);
     }
   }, [orders]);
+
+  useEffect(() => {
+    try {
+      if (user) {
+        localStorage.setItem('shopora_user', JSON.stringify(user));
+      } else {
+        localStorage.removeItem('shopora_user');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [user]);
 
   // Currency formatter
   const formatPrice = (amount) => {
@@ -130,6 +271,7 @@ export const ShopProvider = ({ children }) => {
       }
     });
 
+    addRecentlyViewed(product.id);
     showToast(`Added "${product.name.slice(0, 24)}..." to cart`, 'success');
   };
 
@@ -161,6 +303,7 @@ export const ShopProvider = ({ children }) => {
         return prev.filter((id) => id !== productId);
       } else {
         showToast('Saved to wishlist!', 'success');
+        addRecentlyViewed(productId);
         return [...prev, productId];
       }
     });
@@ -226,6 +369,64 @@ export const ShopProvider = ({ children }) => {
   const taxAmount = (cartSubtotal - discountAmount) * 0.08;
   const cartTotal = Math.max(0, cartSubtotal - discountAmount + shippingAmount + taxAmount);
 
+  // Submit Product Review
+  const submitProductReview = (productId, reviewData) => {
+    setProducts((prev) =>
+      prev.map((p) => {
+        if (p.id === productId) {
+          const newReview = {
+            id: `rev-${Date.now()}`,
+            user: reviewData.user || (user ? user.name : 'Verified Customer'),
+            rating: Number(reviewData.rating) || 5,
+            date: 'Just now',
+            verified: true,
+            title: reviewData.title || 'Exceptional Quality',
+            comment: reviewData.comment
+          };
+          const updatedReviews = [newReview, ...(p.reviews || [])];
+          const newAvgRating = (
+            updatedReviews.reduce((sum, r) => sum + r.rating, 0) / updatedReviews.length
+          ).toFixed(2);
+
+          return {
+            ...p,
+            reviews: updatedReviews,
+            rating: parseFloat(newAvgRating),
+            reviewCount: (p.reviewCount || 0) + 1
+          };
+        }
+        return p;
+      })
+    );
+
+    // If currently viewing in modal, update that as well
+    if (quickViewProduct && quickViewProduct.id === productId) {
+      setQuickViewProduct((prev) => {
+        const newReview = {
+          id: `rev-${Date.now()}`,
+          user: reviewData.user || (user ? user.name : 'Verified Customer'),
+          rating: Number(reviewData.rating) || 5,
+          date: 'Just now',
+          verified: true,
+          title: reviewData.title || 'Exceptional Quality',
+          comment: reviewData.comment
+        };
+        const updatedReviews = [newReview, ...(prev.reviews || [])];
+        const newAvg = (
+          updatedReviews.reduce((sum, r) => sum + r.rating, 0) / updatedReviews.length
+        ).toFixed(2);
+        return {
+          ...prev,
+          reviews: updatedReviews,
+          rating: parseFloat(newAvg),
+          reviewCount: (prev.reviewCount || 0) + 1
+        };
+      });
+    }
+
+    showToast('Your verified review has been published!', 'success');
+  };
+
   // Order Placement
   const placeOrder = (orderData) => {
     const newOrder = {
@@ -251,6 +452,17 @@ export const ShopProvider = ({ children }) => {
     };
 
     setOrders((prev) => [newOrder, ...prev]);
+
+    // Award loyalty points to user
+    if (user) {
+      const earnedPoints = Math.round(cartTotal * 2);
+      setUser((prev) => ({
+        ...prev,
+        points: (prev.points || 0) + earnedPoints
+      }));
+      showToast(`Order placed! You earned ${earnedPoints} VIP Reward Points!`, 'success');
+    }
+
     clearCart();
     return newOrder;
   };
@@ -306,6 +518,19 @@ export const ShopProvider = ({ children }) => {
         currency,
         setCurrency,
         formatPrice,
+        theme,
+        toggleTheme,
+        user,
+        loginUser,
+        logoutUser,
+        isAuthModalOpen,
+        setIsAuthModalOpen,
+        isSizeGuideOpen,
+        setIsSizeGuideOpen,
+        selectedInvoiceOrder,
+        setSelectedInvoiceOrder,
+        recentlyViewed,
+        addRecentlyViewed,
         cart,
         cartCount,
         cartSubtotal,
@@ -340,6 +565,7 @@ export const ShopProvider = ({ children }) => {
         showToast,
         orders,
         placeOrder,
+        submitProductReview,
         activeTab,
         setActiveTab
       }}
@@ -356,4 +582,3 @@ export const useShop = () => {
   }
   return context;
 };
-

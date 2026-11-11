@@ -10,6 +10,10 @@ import { CartDrawer } from './components/CartDrawer';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { OrdersView } from './components/OrdersView';
+import { AuthModal } from './components/AuthModal';
+import { SizeGuideModal } from './components/SizeGuideModal';
+import { InvoiceModal } from './components/InvoiceModal';
+import { RecentlyViewed } from './components/RecentlyViewed';
 import { Newsletter } from './components/Newsletter';
 import { Footer } from './components/Footer';
 import { Toast } from './components/Toast';
@@ -28,6 +32,7 @@ const MainContent = () => {
             <CategoryPills />
             <FeaturedDeals />
             <ProductGrid />
+            <RecentlyViewed />
             <Newsletter />
           </>
         ) : (
@@ -37,11 +42,14 @@ const MainContent = () => {
 
       <Footer />
 
-      {/* Overlays & Drawers */}
+      {/* Overlays, Drawers & Modals */}
       <ProductDetailModal />
       <CartDrawer />
       <WishlistDrawer />
       <CheckoutModal />
+      <AuthModal />
+      <SizeGuideModal />
+      <InvoiceModal />
       <Toast />
     </div>
   );
